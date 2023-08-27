@@ -11,7 +11,7 @@ import java.util.Set;
 @Service
 public class RoleServiceImp implements RoleService {
 
-    private RoleDao roleDao;
+    private final RoleDao roleDao;
 
     public RoleServiceImp(RoleDao roleDao) {
         this.roleDao = roleDao;

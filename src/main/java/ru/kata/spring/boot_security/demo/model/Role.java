@@ -1,5 +1,6 @@
 package ru.kata.spring.boot_security.demo.model;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.*;
@@ -8,7 +9,8 @@ import java.util.*;
 
 @Entity
 @Table(name = "roles")
-public class Role implements GrantedAuthority, Serializable {
+
+public class Role implements GrantedAuthority{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -58,7 +60,7 @@ public class Role implements GrantedAuthority, Serializable {
 
     @Override
     public String toString() {
-        return name;
+        return name.substring(5);
     }
 
     @Override

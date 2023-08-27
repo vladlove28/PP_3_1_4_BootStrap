@@ -57,6 +57,12 @@ public class UserServiceImp implements UserService, UserDetailsService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public User findUserByEmail(String userEmail) {
+        return userDao.findUserByEmail(userEmail);
+    }
+
+    @Override
     @Transactional
     public User saveUser(User user) {
 

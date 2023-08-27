@@ -1,7 +1,6 @@
 package ru.kata.spring.boot_security.demo.init;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+
 import org.springframework.stereotype.Component;
 import ru.kata.spring.boot_security.demo.model.Role;
 import ru.kata.spring.boot_security.demo.model.User;
@@ -10,7 +9,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
-import java.util.stream.Collectors;
+
 
 @Component
 public class Init {
@@ -27,6 +26,7 @@ public class Init {
 //    }
     @PostConstruct
     public void initUsers() {
+
         Role adminRole = new Role("ROLE_ADMIN");
 
         roleService.addRole(adminRole);
@@ -37,6 +37,8 @@ public class Init {
 
         User user = new User();
         user.setName("user");
+        user.setLastName("user");
+        user.setAge(111);
         user.setEmail("user@mail.ru");
         user.setPassword("user");
         user.setRoles(Collections.singleton(userRole));
@@ -44,6 +46,8 @@ public class Init {
 
         User user1 = new User();
         user1.setName("admin");
+        user1.setLastName("admin");
+        user1.setAge(222);
         user1.setEmail("admin@mail.ru");
         user1.setPassword("admin");
         user1.setRoles(Collections.singleton(adminRole));

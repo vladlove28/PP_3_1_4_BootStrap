@@ -18,7 +18,7 @@ import java.util.Collection;
 import java.util.List;
 
 @Controller
-@RequestMapping("user")
+@RequestMapping("/user")
 public class UserController {
     private UserService userService;
     private RoleService roleService;
@@ -33,4 +33,5 @@ public class UserController {
         model.addAttribute("user", userService.findUserByName(principal.getName()));
         return "user/show";
     }
+
 }

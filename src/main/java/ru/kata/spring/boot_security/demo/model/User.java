@@ -1,10 +1,13 @@
 package ru.kata.spring.boot_security.demo.model;
 
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.Fetch;
 import org.hibernate.annotations.FetchMode;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -14,14 +17,19 @@ import java.util.*;
 
 @Entity
 @Table(name = "users")
-public class User implements UserDetails, Serializable {
+//@JsonIgnoreProperties(value = { "hibernateLazyInitializer", "handler" })
+@Component
+public class User implements UserDetails{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
-    @NotEmpty
     @Column(name = "name")
     private String name;
+    @Column(name = "last_name")
+    private String lastName;
+    @Column(name = "age")
+    private Integer age;
     @Column(name = "password")
     private String password;
     @Column(name = "email")
@@ -45,6 +53,15 @@ public class User implements UserDetails, Serializable {
         this.roles = roles;
     }
 
+    public User(String name, String lastName, Integer age, String password, String email, Set<Role> roles) {
+        this.name = name;
+        this.lastName = lastName;
+        this.age = age;
+        this.password = password;
+        this.email = email;
+        this.roles = roles;
+    }
+
     public void setPassword(String password) {
         this.password = password;
     }
@@ -65,6 +82,21 @@ public class User implements UserDetails, Serializable {
         this.name = name;
     }
 
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
+    }
 
     public String getEmail() {
         return email;
@@ -73,7 +105,7 @@ public class User implements UserDetails, Serializable {
     public void setEmail(String email) {
         this.email = email;
     }
-    public Collection<Role> getRoles() {
+    public Set<Role> getRoles() {
         return roles;
     }
 
@@ -121,6 +153,7 @@ public class User implements UserDetails, Serializable {
         return "User{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
+                ", lastname='" + lastName + '\'' +
                 ", email='" + email + '\'' +
                 ", password='" + password + '\'' +
                 ", roles='" + roles + '\'' +
@@ -133,13 +166,15 @@ public class User implements UserDetails, Serializable {
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
         if (id != user.id ) return false;
-        return Objects.equals(name, user.name) && Objects.equals(email, user.email) && Objects.equals(password, user.password);
+        return Objects.equals(name, user.name) && Objects.equals(lastName, user.lastName)
+                && Objects.equals(email, user.email) && Objects.equals(password, user.password);
     }
 
     @Override
     public int hashCode() {
         Integer result = 17;
         result = 31 * result + (name == null ? 0 : name.hashCode());
+        result = 31 * result + (lastName == null ? 0 : lastName.hashCode());
         result = 31 * result + (email == null ? 0 : email.hashCode());
         result = 31 * result + (password == null ? 0 : password.hashCode());
         return result;
