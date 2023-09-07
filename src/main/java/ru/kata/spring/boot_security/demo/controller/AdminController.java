@@ -15,15 +15,12 @@ import ru.kata.spring.boot_security.demo.model.User;
 import ru.kata.spring.boot_security.demo.service.RoleService;
 import ru.kata.spring.boot_security.demo.service.UserService;
 
-import java.security.Principal;
-import java.util.Collections;
-import java.util.HashSet;
+
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 
-@Controller
+
+@RestController
 @RequestMapping("/admin")
 public class AdminController {
 
@@ -35,44 +32,59 @@ public class AdminController {
         this.roleService = roleService;
     }
 
-    @GetMapping
-    public String getAllUsers(@AuthenticationPrincipal User user, Role role, Model model) {
-        model.addAttribute("users", userService.getAllUsers());
-        model.addAttribute("user", user);
-        model.addAttribute("new_user", new User());
-        model.addAttribute("roles", roleService.getAllRolles());
-        model.addAttribute("role", role);
-        return "admin/mainPage";
+    @GetMapping("/users")
+    public ResponseEntity <List<User>> showAllUsers(){
+        List<User> users = userService.getAllUsers();
+        return new ResponseEntity<>(users,HttpStatus.OK);
     }
 
-    // Create
-    @PostMapping("/create")
-    public String create(@ModelAttribute("user") User user,
-                         @RequestParam("authorities") List<String> values
-    ) {
-        Set<Role> roleSet = userService.getSetOfRoles(values);
-        user.setRoles(roleSet);
-        userService.saveUser(user);
-        return "redirect:/admin";
+    @GetMapping("/users/{id}")
+    public ResponseEntity<User> getUser(@PathVariable("id") Long id){
+        User user = userService.getUserById(id);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable("id") Long id) {
-        userService.deleteUser(id);
-        return "redirect:/admin";
-    }
 
-    @PatchMapping("/edit")
-    public String updateUser(@ModelAttribute("user1") User user,
-                             @RequestParam("authorities") List<String> values,
-                             BindingResult bindingResult, Model model) {
-        if (bindingResult.hasErrors()) {
-            return "error";
-        }
-        model.addAttribute("roles", roleService.getAllRolles());
-        Set<Role> rolesSet = userService.getSetOfRoles(values);
-        user.setRoles(rolesSet);
-        userService.update(user.getId(), user);
-        return "redirect:/admin";
-    }
+
+
+//    @GetMapping
+//    public String getAllUsers(@AuthenticationPrincipal User user, Role role, Model model) {
+//        model.addAttribute("users", userService.getAllUsers());
+//        model.addAttribute("user", user);
+//        model.addAttribute("new_user", new User());
+//        model.addAttribute("roles", roleService.getAllRolles());
+//        model.addAttribute("role", role);
+//        return "admin/mainPage";
+//    }
+//
+//    // Create
+//    @PostMapping("/create")
+//    public String create(@ModelAttribute("user") User user,
+//                         @RequestParam("authorities") List<String> values
+//    ) {
+//        Set<Role> roleSet = userService.getSetOfRoles(values);
+//        user.setRoles(roleSet);
+//        userService.saveUser(user);
+//        return "redirect:/admin";
+//    }
+//
+//    @DeleteMapping("/{id}")
+//    public String delete(@PathVariable("id") Long id) {
+//        userService.deleteUser(id);
+//        return "redirect:/admin";
+//    }
+//
+//    @PatchMapping("/edit")
+//    public String updateUser(@ModelAttribute("user1") User user,
+//                             @RequestParam("authorities") List<String> values,
+//                             BindingResult bindingResult, Model model) {
+//        if (bindingResult.hasErrors()) {
+//            return "error";
+//        }
+//        model.addAttribute("roles", roleService.getAllRolles());
+//        Set<Role> rolesSet = userService.getSetOfRoles(values);
+//        user.setRoles(rolesSet);
+//        userService.update(user.getId(), user);
+//        return "redirect:/admin";
+//    }
 }
