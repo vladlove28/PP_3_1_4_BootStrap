@@ -17,7 +17,7 @@ import ru.kata.spring.boot_security.demo.service.UserService;
 
 
 import java.util.List;
-
+import java.util.Set;
 
 
 @RestController
@@ -43,6 +43,37 @@ public class AdminController {
         User user = userService.getUserById(id);
         return new ResponseEntity<>(user, HttpStatus.OK);
     }
+
+    @PostMapping("/create")
+    public ResponseEntity<HttpStatus> addUser(@RequestBody User user,
+                                              @RequestParam("authorities") List<String> values) {
+        Set<Role> roleSet = userService.getSetOfRoles(values);
+        user.setRoles(roleSet);
+        userService.saveUser(user);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<HttpStatus> deleteUser(@PathVariable("id") Long id){
+        userService.deleteUser(id);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @PatchMapping("/edit")
+    public ResponseEntity<HttpStatus> updateUser(@RequestBody User user,
+                                                 @RequestParam("authorities") List<String> values,
+                                                 BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        Set<Role> rolesSet = userService.getSetOfRoles(values);
+        user.setRoles(rolesSet);
+        userService.update(user.getId(), user);
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+
 
 
 
